@@ -3,9 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 
 from flask import jsonify, Flask, render_template, request, redirect, url_for
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 
+CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():

@@ -147,6 +147,8 @@ def profile(spip_session,user):
   nbrOfPeople = place[1].text.strip().split("/")[1]
 
 
+  # A REFAIRE !!!!!!!!
+
   # Récupération des différents challenge
   tabChallenge = soup.find_all('div',{'class':'panel animated_box'})
   string = "["
@@ -156,7 +158,7 @@ def profile(spip_session,user):
     nameChallenge = challenge.find('h4').text.strip()
     string += "\""+nameChallenge+"\","
     string += "\"informations\":"
-    string += "[{"
+    string += "{"
     string += "\"points\":"
     pointChallenge = challenge.find('span',{'class':'gris'}).text.strip()
     string += "\""+pointChallenge+"\","
@@ -164,13 +166,16 @@ def profile(spip_session,user):
     pourcentageChall = challenge.find('div',{'class':'gris'}).text.strip()
     string += "\""+pourcentageChall+"\""
 
-    string += "}]"
+    string += "}"
     string += "}"
     if(challenge != tabChallenge[-1]):
       string += ","
   string += "]"
 
-  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenges=json.loads(string)),200
+  img = "https://www.root-me.org/"
+  img += soup.find_all('img',{'class':'vmiddle logo_auteur logo_6forum'})[3].get('src')
+
+  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenges=json.loads(string),img=img),200
 
 
 

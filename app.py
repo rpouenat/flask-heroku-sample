@@ -170,7 +170,7 @@ def profile(spip_session,user):
       string += ","
   string += "]"
 
-  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenge=json.loads(string)),200
+  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenges=json.loads(string)),200
 
 
 

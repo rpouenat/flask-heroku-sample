@@ -147,18 +147,30 @@ def profile(spip_session,user):
   nbrOfPeople = place[1].text.strip().split("/")[1]
 
 
-
   # Récupération des différents challenge
   tabChallenge = soup.find_all('div',{'class':'panel animated_box'})
-  dicoChall = {}
+  string = "["
+
   for challenge in tabChallenge:
+    string += "{\"nom\":"
     nameChallenge = challenge.find('h4').text.strip()
+    string += "\""+nameChallenge+"\","
+    string += "\"informations\":"
+    string += "[{"
+    string += "\"points\":"
     pointChallenge = challenge.find('span',{'class':'gris'}).text.strip()
+    string += "\""+pointChallenge+"\","
+    string += "\"pourcentage\":"
     pourcentageChall = challenge.find('div',{'class':'gris'}).text.strip()
-    dicoChall[nameChallenge] = [{'Points':pointChallenge},{'Pourcentage':pourcentageChall}]
+    string += "\""+pourcentageChall+"\""
 
+    string += "}]"
+    string += "}"
+    if(challenge != tabChallenge[-1]):
+      string += ","
+  string += "]"
 
-  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenge=json.dumps(dicoChall, ensure_ascii=False)),200
+  return jsonify(name=name,score=score,statut=statut,nbrPost=nbrPost,chatBox=chatBox,nbrChallValidate=nbrChallValidate,nbrChallTotal=nbrChallTotal,classement=classement,nbrOfPeople=nbrOfPeople,challenge=json.loads(string)),200
 
 
 

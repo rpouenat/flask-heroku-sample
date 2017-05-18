@@ -36,6 +36,30 @@ def connected(fn):
         return fn(user=user, *args, **kwargs)
     return wrapped
 
+def category(fn):
+    """Decorator that checks that requests
+    contain an id-token in the request header.
+    user will be None if the
+    authentication failed, and have the User otherwise.
+
+    Usage:
+    @app.route("/")
+    @authorized
+    def secured_root(user=None):
+        pass
+    """
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        datas = request.get_json()
+        category = datas.get('category','')
+        if category is '':
+            # Unauthorized
+            abort(400)
+            return None
+
+        return fn(category=category, *args, **kwargs)
+    return wrapped
+
 
 def authorized(fn):
     """Decorator that checks that requests
@@ -180,6 +204,52 @@ def profile(spip_session,user):
 
 
 
+
+
+# Récupération des inforamtions lié à la catégorie de l'utilisateur
+@app.route('/myCategory', methods=['POST'])
+@authorized
+@connected
+@category
+def myCategory(spip_session,user,category):
+
+  s = requests.Session()
+
+  s.cookies.update({
+    "spip_session": spip_session
+  })
+
+  url = "https://www.root-me.org/"+category
+  r = s.get(url)
+
+  soup = BeautifulSoup(r.text, 'html.parser')
+
+  category = soup.find_all('tbody')
+
+  challenges = category[0].find_all('tr')
+
+  response = []
+
+  for information in challenges:
+    # print(information)
+    challenge = {}
+
+    challenge["name"] = information.find_all('a')[0].text
+    challenge["nbrValidate"] = information.find_all('a')[1].text
+    challenge["author"] = information.find_all('a')[3].text
+    challenge["img"] = information.find_all('img')[0].get('src')
+    response.append(challenge)
+    # print(information.find_all('img')[0].get('src'))
+    # print(information.find_all('a')[0].text)
+    # print(information.find_all('a')[1].text)
+    # print(information.find_all('a')[3].text)
+
+  cpt = 0
+  dicoChallenge = {}
+
+
+
+  return jsonify(response),200
 
 
 

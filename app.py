@@ -237,6 +237,7 @@ def myCategory(spip_session,user,category):
     else:
       challenge["author"] = information.find_all('a')[3].text
     challenge["img"] = "https://www.root-me.org/"+information.find_all('img')[0].get('src')
+    challenge["points"] = information.find_all('td')[3].text
     response.append(challenge)
     # print(information.find_all('img')[0].get('src'))
     # print(information.find_all('a')[0].text)

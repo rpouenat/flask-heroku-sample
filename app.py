@@ -212,43 +212,39 @@ def profile(spip_session,user):
 @connected
 @category
 def myCategory(spip_session,user,category):
-
   s = requests.Session()
-
   s.cookies.update({
     "spip_session": spip_session
   })
-
-  url = "https://www.root-me.org/"+category
+  url = "https://www.root-me.org/fr/Challenges/"+str(category)
   r = s.get(url)
-
+  print("\n\n\n\n\n\n\n\n\n\n")
   soup = BeautifulSoup(r.text, 'html.parser')
 
+  # print(r.text)
+
+  # print(category[0].find_all('tr'))
+
+
   category = soup.find_all('tbody')
-
   challenges = category[0].find_all('tr')
-
   response = []
-
   for information in challenges:
-    # print(information)
     challenge = {}
-
     challenge["name"] = information.find_all('a')[0].text
     challenge["nbrValidate"] = information.find_all('a')[1].text
-    challenge["author"] = information.find_all('a')[3].text
+    if(len(information.find_all('a')) < 4): 
+      challenge["author"] = ""
+    else:
+      challenge["author"] = information.find_all('a')[3].text
     challenge["img"] = information.find_all('img')[0].get('src')
     response.append(challenge)
     # print(information.find_all('img')[0].get('src'))
     # print(information.find_all('a')[0].text)
     # print(information.find_all('a')[1].text)
     # print(information.find_all('a')[3].text)
-
   cpt = 0
   dicoChallenge = {}
-
-
-
   return jsonify(response),200
 
 

@@ -230,6 +230,7 @@ def myCategory(spip_session,user,category):
   response = []
   for information in challenges:
     challenge = {}
+    challenge["link"] = information.find_all('a')[0].get('href')
     challenge["name"] = information.find_all('a')[0].text
     challenge["nbrValidate"] = information.find_all('a')[1].text
     if(len(information.find_all('a')) < 4): 

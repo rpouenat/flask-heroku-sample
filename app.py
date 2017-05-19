@@ -218,7 +218,6 @@ def myCategory(spip_session,user,category):
   })
   url = "https://www.root-me.org/fr/Challenges/"+str(category)
   r = s.get(url)
-  print("\n\n\n\n\n\n\n\n\n\n")
   soup = BeautifulSoup(r.text, 'html.parser')
 
   # print(r.text)
@@ -237,7 +236,7 @@ def myCategory(spip_session,user,category):
       challenge["author"] = ""
     else:
       challenge["author"] = information.find_all('a')[3].text
-    challenge["img"] = information.find_all('img')[0].get('src')
+    challenge["img"] = "https://www.root-me.org/fr/Challenges/"+information.find_all('img')[0].get('src')
     response.append(challenge)
     # print(information.find_all('img')[0].get('src'))
     # print(information.find_all('a')[0].text)

@@ -60,6 +60,30 @@ def category(fn):
         return fn(category=category, *args, **kwargs)
     return wrapped
 
+def challenge(fn):
+    """Decorator that checks that requests
+    contain an id-token in the request header.
+    user will be None if the
+    authentication failed, and have the User otherwise.
+
+    Usage:
+    @app.route("/")
+    @authorized
+    def secured_root(user=None):
+        pass
+    """
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        datas = request.get_json()
+        challenge = datas.get('challenge','')
+        if challenge is '':
+            # Unauthorized
+            abort(400)
+            return None
+
+        return fn(challenge=challenge, *args, **kwargs)
+    return wrapped
+
 
 def authorized(fn):
     """Decorator that checks that requests
@@ -247,6 +271,30 @@ def myCategory(spip_session,user,category):
   cpt = 0
   dicoChallenge = {}
   return jsonify(response),200
+
+
+@app.route('/challenge', methods=['POST'])
+@authorized
+@connected
+@challenge
+def challenge(spip_session,user,challenge):
+
+  #test
+
+  s = requests.Session()
+  s.cookies.update({
+    "spip_session": spip_session
+  })
+
+  url = challenge
+
+  print(r.text)
+
+  return jsonify(),200
+
+
+
+
 
 
 
